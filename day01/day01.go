@@ -37,6 +37,31 @@ func (*Day01) Part1(r io.Reader) int {
 }
 
 func (*Day01) Part2(r io.Reader) int {
-	fmt.Println("Part2 not implemented")
-	return -1
+	dial := 50
+	var res int
+	for row := range its.Filter(its.ReaderToIter(r), its.FilterEmptyLines) {
+		var direction rune
+		var length int
+		fmt.Sscanf(row, "%c%d", &direction, &length)
+
+		switch direction {
+		case 'R':
+			for range length {
+				dial = utils.IntMod(dial+1, 100)
+				if dial == 0 {
+					res++
+				}
+			}
+		case 'L':
+			for range length {
+				dial = utils.IntMod(dial-1, 100)
+				if dial == 0 {
+					res++
+				}
+			}
+		default:
+			panic("unreachable")
+		}
+	}
+	return res
 }

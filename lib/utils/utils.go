@@ -11,6 +11,9 @@ func IntAbs(l, r int) int {
 }
 
 func IntMod(v, mod int) int {
+	if v > 0 && v < mod {
+		return v
+	}
 	return ((v % mod) + mod) % mod
 }
 
