@@ -24,15 +24,35 @@ func ReaderToIter(r io.Reader, splits ...bufio.SplitFunc) iter.Seq[string] {
 	}
 }
 
-func SplitByBlocks(data []byte, atEOF bool) (advance int, token []byte, err error) {
-	if atEOF && len(data) == 0 {
+func SplitByString(s string) bufio.SplitFunc {
+	sLen := len(s)
+	return func(data []byte, atEOF bool) (advance int, token []byte, err error) {
+		if atEOF && len(data) == 0 {
+			return 0, nil, nil
+		}
+		if i := bytes.Index(data, []byte(s)); i >= 0 {
+			return i + sLen, data[:i], nil
+		}
+		if atEOF {
+			return len(data), data, nil
+		}
 		return 0, nil, nil
 	}
-	if i := bytes.Index(data, []byte("\n\n")); i >= 0 {
-		return i + 2, data[:i], nil
+}
+
+var SplitByBlocks = SplitByString("\n\n")
+
+func SplitByByte(c byte) bufio.SplitFunc {
+	return func(data []byte, atEOF bool) (advance int, token []byte, err error) {
+		if atEOF && len(data) == 0 {
+			return 0, nil, nil
+		}
+		if i := bytes.IndexByte(data, c); i >= 0 {
+			return i + 1, data[:i], nil
+		}
+		if atEOF {
+			return len(data), data, nil
+		}
+		return 0, nil, nil
 	}
-	if atEOF {
-		return len(data), data, nil
-	}
-	return 0, nil, nil
 }
