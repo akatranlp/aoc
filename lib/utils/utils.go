@@ -10,4 +10,8 @@ func IntAbs(l, r int) int {
 	return v
 }
 
+func IntMod(v, mod int) int {
+	return ((v % mod) + mod) % mod
+}
+
 func MapToInt(s string) int { return Must(strconv.Atoi(s)) }
