@@ -1,9 +1,9 @@
 package main
 
 import (
-	"aoc-lib/aoc"
-	"aoc-lib/its"
-	"aoc-lib/utils"
+	"aoc/lib/aoc"
+	"aoc/lib/its"
+	"aoc/lib/utils"
 	"fmt"
 	"io"
 )
@@ -22,9 +22,9 @@ func (*Day01) Part1(r io.Reader) int {
 
 		switch direction {
 		case 'R':
-			dial = utils.IntMod(dial+length, 100)
+			dial = utils.Mod(dial+length, 100)
 		case 'L':
-			dial = utils.IntMod(dial-length, 100)
+			dial = utils.Mod(dial-length, 100)
 		default:
 			panic("unreachable")
 		}
@@ -47,14 +47,14 @@ func (*Day01) Part2(r io.Reader) int {
 		switch direction {
 		case 'R':
 			for range length {
-				dial = utils.IntMod(dial+1, 100)
+				dial = utils.Mod(dial+1, 100)
 				if dial == 0 {
 					res++
 				}
 			}
 		case 'L':
 			for range length {
-				dial = utils.IntMod(dial-1, 100)
+				dial = utils.Mod(dial-1, 100)
 				if dial == 0 {
 					res++
 				}

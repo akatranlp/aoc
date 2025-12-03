@@ -1,8 +1,9 @@
 package main
 
 import (
-	"aoc-lib/aoc"
-	"aoc-lib/its"
+	"aoc/lib/aoc"
+	"aoc/lib/its"
+	"aoc/lib/utils"
 	"io"
 	"slices"
 )
@@ -13,9 +14,7 @@ var _ aoc.Problem = (*Day03)(nil)
 
 func (*Day03) Part1(r io.Reader) int {
 	return its.Reduce(its.Filter(its.ReaderToIter(r), its.FilterEmptyLines), 0, func(acc int, row string) int {
-		numbers := slices.Collect(its.Map(slices.Values([]byte(row)), func(c byte) int {
-			return int(c) - 48
-		}))
+		numbers := slices.Collect(its.Map(slices.Values([]byte(row)), utils.MapByteToInt))
 
 		var maxIdx int
 		for i := 1; i < len(numbers)-1; i++ {
@@ -38,9 +37,7 @@ func (*Day03) Part1(r io.Reader) int {
 
 func (*Day03) Part2(r io.Reader) int {
 	return its.Reduce(its.Filter(its.ReaderToIter(r), its.FilterEmptyLines), 0, func(acc int, row string) int {
-		numbers := slices.Collect(its.Map(slices.Values([]byte(row)), func(c byte) int {
-			return int(c) - 48
-		}))
+		numbers := slices.Collect(its.Map(slices.Values([]byte(row)), utils.MapByteToInt))
 
 		maxIdxs := make([]int, 12)
 		for i := range maxIdxs {

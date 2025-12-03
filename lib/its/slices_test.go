@@ -1,7 +1,7 @@
 package its_test
 
 import (
-	"aoc-lib/its"
+	"aoc/lib/its"
 	"iter"
 	"slices"
 	"testing"

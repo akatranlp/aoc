@@ -1,8 +1,8 @@
 package main
 
 import (
-	"aoc-lib/aoc"
-	"aoc-lib/its"
+	"aoc/lib/aoc"
+	"aoc/lib/its"
 	"fmt"
 	"io"
 	"strconv"

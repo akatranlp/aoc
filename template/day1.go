@@ -1,7 +1,7 @@
 package main
 
 import (
-	"aoc-lib/aoc"
+	"aoc/lib/aoc"
 	"fmt"
 	"io"
 )

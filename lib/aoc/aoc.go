@@ -1,8 +1,7 @@
 package aoc
 
 import (
-	"aoc-lib/utils"
-	"bytes"
+	"aoc/lib/utils"
 	"fmt"
 	"io"
 	"os"
@@ -17,18 +16,18 @@ type Problem interface {
 func Run(fileName string, p Problem, problems ...int) {
 	file := utils.Must(os.Open(fileName))
 	defer file.Close()
-	buf := bytes.NewReader(utils.Must(io.ReadAll(file)))
 
 	if len(problems) == 0 {
-		run1(buf, p)
-		buf.Seek(0, io.SeekStart)
-		run2(buf, p)
+		run1(file, p)
+		file.Seek(0, io.SeekStart)
+		run2(file, p)
 	} else {
-		if problems[0] == 1 {
-			run1(buf, p)
-		} else if problems[0] == 2 {
-			run2(buf, p)
-		} else {
+		switch problems[0] {
+		case 1:
+			run1(file, p)
+		case 2:
+			run2(file, p)
+		default:
 			panic("false problem number")
 		}
 	}

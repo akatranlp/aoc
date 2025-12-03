@@ -1,7 +1,7 @@
 package map2d
 
 import (
-	"aoc-lib/its"
+	"aoc/lib/its"
 	"fmt"
 	"io"
 	"iter"

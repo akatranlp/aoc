@@ -1,7 +1,7 @@
 package its_test
 
 import (
-	"aoc-lib/its"
+	"aoc/lib/its"
 	"bufio"
 	"bytes"
 	"log"
