@@ -1,9 +1,9 @@
 package main
 
 import (
-	"aoc-lib/aoc"
-	"aoc-lib/map2d"
-	"aoc-lib/slices"
+	"aoc/lib/aoc"
+	"aoc/lib/map2d"
+	"aoc/lib/slices"
 	"io"
 )
 

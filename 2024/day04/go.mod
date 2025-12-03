@@ -1,4 +1,4 @@
-module aoc/2024/day10
+module aoc/2024/day04
 
 go 1.25
 

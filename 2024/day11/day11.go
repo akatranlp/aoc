@@ -1,9 +1,9 @@
 package main
 
 import (
-	"aoc-lib/aoc"
-	"aoc-lib/its"
-	"aoc-lib/utils"
+	"aoc/lib/aoc"
+	"aoc/lib/its"
+	"aoc/lib/utils"
 	"io"
 	"strconv"
 	"strings"
@@ -14,7 +14,7 @@ type Day11 struct{}
 var _ aoc.Problem = (*Day11)(nil)
 
 func (*Day11) Part1(r io.Reader) int {
-	numbers := its.MapSlice(strings.Fields(string(utils.Must(io.ReadAll(r)))), utils.MapToInt)
+	numbers := its.MapSlice(strings.Fields(string(utils.Must(io.ReadAll(r)))), utils.MapStrToInt)
 
 	for range 25 {
 		newSlice := make([]int, 0, len(numbers)*2)
@@ -26,8 +26,8 @@ func (*Day11) Part1(r io.Reader) int {
 			}
 			numString := strconv.Itoa(v)
 			if len(numString)%2 == 0 {
-				firstHalf := utils.MapToInt(numString[:len(numString)/2])
-				secondHalf := utils.MapToInt(numString[len(numString)/2:])
+				firstHalf := utils.MapStrToInt(numString[:len(numString)/2])
+				secondHalf := utils.MapStrToInt(numString[len(numString)/2:])
 				newSlice = append(newSlice, firstHalf)
 				newSlice = append(newSlice, secondHalf)
 				continue
@@ -42,7 +42,7 @@ func (*Day11) Part1(r io.Reader) int {
 }
 
 func (*Day11) Part2(r io.Reader) int {
-	numbers := its.MapSlice(strings.Fields(string(utils.Must(io.ReadAll(r)))), utils.MapToInt)
+	numbers := its.MapSlice(strings.Fields(string(utils.Must(io.ReadAll(r)))), utils.MapStrToInt)
 	numbersMap := make(map[int]int)
 	for _, n := range numbers {
 		numbersMap[n]++
@@ -59,8 +59,8 @@ func (*Day11) Part2(r io.Reader) int {
 			numString := strconv.Itoa(number)
 			if len(numString)%2 == 0 {
 				half := len(numString) / 2
-				firstHalf := utils.MapToInt(numString[:half])
-				secondHalf := utils.MapToInt(numString[half:])
+				firstHalf := utils.MapStrToInt(numString[:half])
+				secondHalf := utils.MapStrToInt(numString[half:])
 				newNumbers[firstHalf] += count
 				newNumbers[secondHalf] += count
 				continue
