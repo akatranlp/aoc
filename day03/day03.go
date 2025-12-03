@@ -5,7 +5,6 @@ import (
 	"aoc-lib/its"
 	"io"
 	"slices"
-	"strconv"
 )
 
 type Day03 struct{}
@@ -13,8 +12,7 @@ type Day03 struct{}
 var _ aoc.Problem = (*Day03)(nil)
 
 func (*Day03) Part1(r io.Reader) int {
-	var res int
-	for row := range its.Filter(its.ReaderToIter(r), its.FilterEmptyLines) {
+	return its.Reduce(its.Filter(its.ReaderToIter(r), its.FilterEmptyLines), 0, func(acc int, row string) int {
 		numbers := slices.Collect(its.Map(slices.Values([]byte(row)), func(c byte) int {
 			return int(c) - 48
 		}))
@@ -34,33 +32,31 @@ func (*Day03) Part1(r io.Reader) int {
 		}
 
 		maxNum := numbers[maxIdx]*10 + numbers[max2Idx]
-		res += maxNum
-	}
-	return res
+		return acc + maxNum
+	})
 }
 
 func (*Day03) Part2(r io.Reader) int {
-	var res int
-	for row := range its.Filter(its.ReaderToIter(r), its.FilterEmptyLines) {
-		numbers := []byte(row)
+	return its.Reduce(its.Filter(its.ReaderToIter(r), its.FilterEmptyLines), 0, func(acc int, row string) int {
+		numbers := slices.Collect(its.Map(slices.Values([]byte(row)), func(c byte) int {
+			return int(c) - 48
+		}))
 
 		maxIdxs := make([]int, 12)
 		for i := range maxIdxs {
 			if i != 0 {
 				maxIdxs[i] = maxIdxs[i-1] + 1
 			}
-			for j := maxIdxs[i]; j < len(numbers)-(11-i); j++ {
+			for j := maxIdxs[i]; j <= len(numbers)-(12-i); j++ {
 				if numbers[j] > numbers[maxIdxs[i]] {
 					maxIdxs[i] = j
 				}
 			}
 		}
-		resBytes := make([]byte, 12)
+		maxNum := 0
 		for i := range maxIdxs {
-			resBytes[i] = numbers[maxIdxs[i]]
+			maxNum = maxNum*10 + numbers[maxIdxs[i]]
 		}
-		maxNum, _ := strconv.Atoi(string(resBytes))
-		res += maxNum
-	}
-	return res
+		return acc + maxNum
+	})
 }
