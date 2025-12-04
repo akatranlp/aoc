@@ -6,12 +6,16 @@ import (
 )
 
 var part1Test = `
-3   4
-4   3
-2   5
-1   3
-3   9
-3   3
+..@@.@@@@.
+@@@.@.@.@@
+@@@@@.@.@@
+@.@@@@..@.
+@@.@@@@.@@
+.@@@@@@@.@
+.@.@.@.@@@
+@.@@@.@@@@
+.@@@@@@@@.
+@.@.@@@.@.
 `
 
 func TestDay04(t *testing.T) {
@@ -19,7 +23,7 @@ func TestDay04(t *testing.T) {
 	t.Run("part 1", func(t *testing.T) {
 		input := bytes.NewBufferString(part1Test)
 
-		expected := -1
+		expected := 13
 		actual := day04.Part1(input)
 
 		if expected != actual {
