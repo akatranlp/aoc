@@ -29,22 +29,15 @@ func (*Day04) Part1(r io.Reader) int {
 				}
 				dir := map2d.NewVector2(dRow, dCol)
 				newVec := cell.ExtractCoords().Add(dir)
-				// fmt.Printf("point: %+v, dir: %+v, newDir: %+v", cell, dir, newVec)
 				if !field.InBounce(newVec) {
-					// fmt.Println("Not in bounce")
 					continue
 				}
-				// fmt.Printf(", look: %+v ->", field.Get(newVec))
 				if field.Get(newVec).Value == '@' {
-					// fmt.Println("HIT")
 					paperRollCount++
-				} else {
-					// fmt.Println("MISS")
 				}
 			}
 		}
 		if paperRollCount < 4 {
-			// fmt.Printf("point: %+v has less papers: %d\n", cell, paperRollCount)
 			res++
 		}
 	}
@@ -72,17 +65,11 @@ func (*Day04) Part2(r io.Reader) int {
 				}
 				dir := map2d.NewVector2(dRow, dCol)
 				newVec := cell.ExtractCoords().Add(dir)
-				// fmt.Printf("point: %+v, dir: %+v, newDir: %+v", cell, dir, newVec)
 				if !field.InBounce(newVec) {
-					// fmt.Println("Not in bounce")
 					continue
 				}
-				// fmt.Printf(", look: %+v ->", field.Get(newVec))
 				if field.Get(newVec).Value == '@' {
-					// fmt.Println("HIT")
 					paperRollCount++
-				} else {
-					// fmt.Println("MISS")
 				}
 			}
 		}
