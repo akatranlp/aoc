@@ -100,17 +100,12 @@ func (*Day05) Part2(r io.Reader) int {
 	changed := true
 	for changed {
 		changed = false
-		for _, r := range ranges {
-			if !r.valid {
+		for cr := range its.AllCombinations(ranges, false) {
+			if !cr.L.valid || !cr.R.valid {
 				continue
 			}
-			for _, or := range ranges {
-				if !or.valid || r == or {
-					continue
-				}
-				if !r.CombineRanges(or).valid {
-					changed = true
-				}
+			if !cr.L.CombineRanges(cr.R).valid {
+				changed = true
 			}
 		}
 	}
