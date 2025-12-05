@@ -77,6 +77,18 @@ func AllCombinations[T any](slice []T, includeSelf bool) iter.Seq[Combination[T]
 	}
 }
 
+func Matrix[T any](slice []T) iter.Seq[Combination[T]] {
+	return func(yield func(Combination[T]) bool) {
+		for i := range len(slice) {
+			for j := range len(slice) {
+				if !yield(Combination[T]{slice[i], slice[j]}) {
+					return
+				}
+			}
+		}
+	}
+}
+
 func Window[T any](seq iter.Seq[T], n int) iter.Seq[[]T] {
 	window := make([]T, 0)
 	return func(yield func([]T) bool) {
@@ -269,6 +281,16 @@ func Enumerate[T any](seq iter.Seq[T]) iter.Seq2[int, T] {
 func ForEach[T any](seq iter.Seq[T], f func(T)) {
 	for v := range seq {
 		f(v)
+	}
+}
+
+func RangeFromTo(from, to int) iter.Seq[int] {
+	return func(yield func(int) bool) {
+		for i := from; i < to; i++ {
+			if !yield(i) {
+				return
+			}
+		}
 	}
 }
 

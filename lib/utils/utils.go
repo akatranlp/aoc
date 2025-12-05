@@ -25,4 +25,5 @@ func Mod[T constraints.Integer](v, mod T) T {
 }
 
 func MapStrToInt(s string) int { return Must(strconv.Atoi(s)) }
+func IsDigit(c byte) bool      { return c >= '0' && c <= '9' }
 func MapByteToInt(c byte) int  { return int(c - '0') }
