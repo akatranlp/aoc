@@ -3,7 +3,7 @@
 year=$1
 day=$2
 
-if [ -z "$day" ]; then
+if [[ -z $day || -z $year ]]; then
     echo "usage: $0 <2015...> <01-24>"
     exit 1
 fi
@@ -20,8 +20,8 @@ cp template/day1.go $targetDir/day${day}.go
 go work use ./$targetDir
 
 for file in $targetDir/*; do
-    sed -i -e "s/day1/day$day/g" $file
     sed -i -e "s/2025\/day1/$year\/day$day/g" $file
+    sed -i -e "s/day1/day$day/g" $file
     sed -i -e "s/Day1/Day$day/g" $file
     sed -i -e "s/aoc\/2025\/day01/aoc\/$year\/day$day/g" $file
 done
