@@ -28,7 +28,7 @@ func TestDay06(t *testing.T) {
 	t.Run("part 2", func(t *testing.T) {
 		input := bytes.NewBufferString(part1Test)
 
-		expected := -1
+		expected := 3263827
 		actual := day06.Part2(input)
 
 		if expected != actual {
