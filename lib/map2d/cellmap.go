@@ -9,8 +9,8 @@ import (
 
 type CellMap[T any] struct {
 	data [][]T
-	rows int
-	cols int
+	Rows int
+	Cols int
 }
 
 func NewCellMap[T any](r io.Reader, mapFn func(x, y int, value byte) T) *CellMap[T] {
@@ -25,15 +25,15 @@ func NewCellMap[T any](r io.Reader, mapFn func(x, y int, value byte) T) *CellMap
 		map2d.data = append(map2d.data, rowSlice)
 
 	}
-	map2d.rows = len(map2d.data)
-	map2d.cols = len(map2d.data[0])
+	map2d.Rows = len(map2d.data)
+	map2d.Cols = len(map2d.data[0])
 	return map2d
 }
 
 func CellMapFn(x, y int, value byte) Cell { return Cell{X: x, Y: y, Value: value} }
 
 func (d *CellMap[T]) InBounce(v Vector2) bool {
-	return v.Y >= 0 && v.Y < d.rows && v.X >= 0 && v.X < d.cols
+	return v.Y >= 0 && v.Y < d.Rows && v.X >= 0 && v.X < d.Cols
 }
 
 func (d *CellMap[T]) Get(v Vector2) T {
