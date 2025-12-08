@@ -5,7 +5,6 @@ import (
 	"aoc/lib/its"
 	"aoc/lib/ranges"
 	"aoc/lib/utils"
-	"fmt"
 	"io"
 	"slices"
 	"strings"
@@ -70,6 +69,57 @@ func (*Day05) Part1(r io.Reader) int {
 }
 
 func (*Day05) Part2(r io.Reader) int {
-	fmt.Println("Part2 not implemented")
+	var nums []ranges.Range
+	var mappings [][]Mapping
+	for i, block := range its.Enumerate(its.ReaderToIter(r, its.SplitByBlocks)) {
+		if i == 0 {
+			nums = slices.Collect(
+				its.Map2(its.Chunk2(
+					its.Map(
+						strings.FieldsSeq(strings.Split(block, ":")[1]),
+						utils.MapStrToInt,
+					),
+				), func(left, right int) ranges.Range {
+					return ranges.NewRangeCount(left, right)
+				}))
+			continue
+		}
+		mappings = append(mappings, slices.Collect(its.Map(its.Skip(
+			its.Filter(
+				strings.SplitSeq(block, "\n"),
+				its.FilterEmptyLines,
+			),
+			1,
+		), func(row string) Mapping {
+			numbers := slices.Collect(
+				its.Map(
+					strings.FieldsSeq(row),
+					utils.MapStrToInt,
+				),
+			)
+			srcRange := ranges.NewRangeCount(numbers[1], numbers[2])
+			dstRange := ranges.NewRangeCount(numbers[0], numbers[2])
+			return Mapping{srcRange, dstRange}
+		})))
+	}
+
+	// range out of range spl
+
+	for _, mapping := range mappings {
+		var newNums []ranges.Range
+		for j := range len(nums) {
+			num := nums[j]
+			for _, m := range mapping {
+				switch m.src.RangeInRange(&num) {
+				case ranges.FullOuter:
+				case ranges.FullInnerLeft:
+				case ranges.FullInnerRight:
+				case ranges.ConnectLeft:
+				case ranges.ConnectRight:
+					continue
+				}
+			}
+		}
+	}
 	return -1
 }

@@ -6,6 +6,23 @@ import (
 	"slices"
 )
 
+func Chunk2[T any](seq iter.Seq[T]) iter.Seq2[T, T] {
+	return func(yield func(T, T) bool) {
+		next, stop := iter.Pull(seq)
+		defer stop()
+		for {
+			v1, ok1 := next()
+			v2, ok2 := next()
+			if !ok1 && !ok2 {
+				return
+			}
+			if !yield(v1, v2) {
+				return
+			}
+		}
+	}
+}
+
 func Zip[T, K any](seq1 iter.Seq[T], seq2 iter.Seq[K]) iter.Seq2[T, K] {
 	return func(yield func(T, K) bool) {
 		next1, stop1 := iter.Pull(seq1)

@@ -29,3 +29,37 @@ func (r *Range) CombineRanges(v *Range) *Range {
 	}
 	return v
 }
+
+type states int
+
+const (
+	FullOuter states = iota
+	FullInnerLeft
+	FullInnerRight
+	ConnectLeft
+	ConnectRight
+)
+
+func (r *Range) RangeInRange(v *Range) states {
+	if r.Up < v.Down || r.Down > v.Up {
+		return FullOuter
+	} else if r.Up > v.Down && r.Down < v.Up {
+		return FullInnerLeft
+	} else if v.Up > r.Down && v.Down < r.Up {
+		return FullInnerLeft
+	} else if r.Down < v.Down && r.Up > v.Down {
+		return ConnectLeft
+	} else if r.Up > v.Up && r.Down < v.Up {
+		return ConnectRight
+	}
+	panic("unreachable")
+}
+
+func (r *Range) SplitRange(left int) Range {
+	if r.Down > left || r.Up < left {
+		return Range{}
+	}
+	v := NewRange(left+1, r.Up)
+	r.Up = left
+	return v
+}
