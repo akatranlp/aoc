@@ -43,7 +43,7 @@ func (d *Day08) Part1(r io.Reader) int {
 	return d.Part1Impl(r, false)
 }
 
-func (*Day08) Part1Impl(r io.Reader, test bool) int {
+func (d *Day08) Part1Impl(r io.Reader, test bool) int {
 	coords := slices.Collect(its.Map(its.Filter(
 		its.ReaderToIter(r),
 		its.FilterEmptyLines,
@@ -52,55 +52,12 @@ func (*Day08) Part1Impl(r io.Reader, test bool) int {
 		return Vec3{coords[0], coords[1], coords[2]}
 	}))
 
-	distances := slices.Collect(
-		its.Map(its.AllCombinationsWithIdx(coords, false), func(v its.CombinationWithIdx[Vec3]) Entry {
-			return Entry{v.LIdx, v.RIdx, v.L.sqDistance(v.R)}
-		}))
-	slices.SortFunc(distances, func(a, b Entry) int { return a.distance - b.distance })
-
-	remaining := aocSlices.NewSetFromIter(its.Range(len(coords)))
-	var circuits [][]int
-
 	count := 1000
 	if test {
 		count = 10
 	}
 
-	for _, d := range distances {
-		if len(remaining) == 0 || count == 0 {
-			break
-		}
-		LCIdx, RCIdx := -1, -1
-		if !remaining.Has(d.LIdx) {
-			LCIdx = InCircuit(circuits, d.LIdx)
-		}
-		if !remaining.Has(d.RIdx) {
-			RCIdx = InCircuit(circuits, d.RIdx)
-		}
-		if LCIdx != -1 && RCIdx != -1 {
-			if LCIdx == RCIdx {
-				count--
-				continue
-			}
-			rc := circuits[RCIdx]
-			circuits[LCIdx] = append(circuits[LCIdx], rc...)
-			circuits = its.RemoveIndex(circuits, RCIdx)
-			count--
-		} else if LCIdx == -1 && RCIdx == -1 {
-			delete(remaining, d.LIdx)
-			delete(remaining, d.RIdx)
-			count--
-			circuits = append(circuits, []int{d.LIdx, d.RIdx})
-		} else if LCIdx == -1 {
-			delete(remaining, d.LIdx)
-			count--
-			circuits[RCIdx] = append(circuits[RCIdx], d.LIdx)
-		} else if RCIdx == -1 {
-			delete(remaining, d.RIdx)
-			count--
-			circuits[LCIdx] = append(circuits[LCIdx], d.RIdx)
-		}
-	}
+	circuits, _, _ := d.combineCircuits(coords, count)
 
 	res := 1
 	circuitLens := its.MapSlice(circuits, func(c []int) int { return len(c) })
@@ -115,7 +72,7 @@ func (*Day08) Part1Impl(r io.Reader, test bool) int {
 	return res
 }
 
-func (*Day08) Part2(r io.Reader) int {
+func (d *Day08) Part2(r io.Reader) int {
 	coords := slices.Collect(its.Map(its.Filter(
 		its.ReaderToIter(r),
 		its.FilterEmptyLines,
@@ -123,7 +80,12 @@ func (*Day08) Part2(r io.Reader) int {
 		coords := slices.Collect(its.Map(strings.SplitSeq(row, ","), utils.MapStrToInt))
 		return Vec3{coords[0], coords[1], coords[2]}
 	}))
+	_, lastLIdx, lastRIdx := d.combineCircuits(coords, 1<<62)
 
+	return coords[lastLIdx].x * coords[lastRIdx].x
+}
+
+func (*Day08) combineCircuits(coords []Vec3, count int) (circuits [][]int, lastLIdx, lastRIdx int) {
 	distances := slices.Collect(
 		its.Map(its.AllCombinationsWithIdx(coords, false), func(v its.CombinationWithIdx[Vec3]) Entry {
 			return Entry{v.LIdx, v.RIdx, v.L.sqDistance(v.R)}
@@ -131,11 +93,9 @@ func (*Day08) Part2(r io.Reader) int {
 	slices.SortFunc(distances, func(a, b Entry) int { return a.distance - b.distance })
 
 	remaining := aocSlices.NewSetFromIter(its.Range(len(coords)))
-	var circuits [][]int
 
-	var lastLIdx, lastRIdx int
-	for _, d := range distances {
-		if len(remaining) == 0 {
+	for i, d := range distances {
+		if len(remaining) == 0 || i == count {
 			break
 		}
 		LCIdx, RCIdx := -1, -1
@@ -168,6 +128,5 @@ func (*Day08) Part2(r io.Reader) int {
 			circuits[LCIdx] = append(circuits[LCIdx], d.RIdx)
 		}
 	}
-
-	return coords[lastLIdx].x * coords[lastRIdx].x
+	return
 }
