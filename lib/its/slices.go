@@ -77,6 +77,27 @@ func AllCombinations[T any](slice []T, includeSelf bool) iter.Seq[Combination[T]
 	}
 }
 
+type CombinationWithIdx[T any] struct {
+	L, R       T
+	LIdx, RIdx int
+}
+
+func AllCombinationsWithIdx[T any](slice []T, includeSelf bool) iter.Seq[CombinationWithIdx[T]] {
+	return func(yield func(CombinationWithIdx[T]) bool) {
+		for i := range len(slice) {
+			start := i
+			if !includeSelf {
+				start += 1
+			}
+			for j := start; j < len(slice); j++ {
+				if !yield(CombinationWithIdx[T]{slice[i], slice[j], i, j}) {
+					return
+				}
+			}
+		}
+	}
+}
+
 func Matrix[T any](slice []T) iter.Seq[Combination[T]] {
 	return func(yield func(Combination[T]) bool) {
 		for i := range len(slice) {
