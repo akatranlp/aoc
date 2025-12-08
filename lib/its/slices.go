@@ -324,3 +324,18 @@ func Range(n int) iter.Seq[int] {
 		}
 	}
 }
+
+func Skip[T any](seq iter.Seq[T], n int) iter.Seq[T] {
+	return func(yield func(T) bool) {
+		for v := range seq {
+			if n > 0 {
+				n--
+				continue
+			}
+			if !yield(v) {
+				return
+			}
+		}
+	}
+
+}
