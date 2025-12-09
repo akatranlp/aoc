@@ -38,6 +38,17 @@ func (*Day09) Part1(r io.Reader) int {
 }
 
 func (*Day09) Part2(r io.Reader) int {
+	points := slices.Collect(its.Map(
+		its.Filter(
+			its.ReaderToIter(r),
+			its.FilterEmptyLines),
+		func(row string) map2d.Vector2 {
+			nums := strings.Split(row, ",")
+			return map2d.NewVector2(utils.MapStrToInt(nums[0]), utils.MapStrToInt(nums[1]))
+		},
+	))
+	_ = points
+
 	fmt.Println("Part2 not implemented")
 	return -1
 }
