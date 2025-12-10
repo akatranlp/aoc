@@ -99,7 +99,55 @@ func checkCombinations(combinations []Entry, light uint16) bool {
 	return slices.ContainsFunc(combinations, func(e Entry) bool { return e.sum == light })
 }
 
+type Machine2 struct {
+	joltages []int
+	buttons  [][]int
+}
+
+func (m *Machine2) Print() {
+	fmt.Printf("Joltages:\n- ")
+	for _, j := range m.joltages {
+		fmt.Printf("%2d ", j)
+	}
+	fmt.Printf("\nButtons:")
+
+	for _, b := range m.buttons {
+		fmt.Printf("\n- ")
+		for _, n := range b {
+			fmt.Printf("%2d ", n)
+		}
+	}
+	fmt.Println("")
+}
+
 func (*Day10) Part2(r io.Reader) int {
-	fmt.Println("Part2 not implemented")
-	return -1
+	return its.Reduce2(its.Enumerate(its.Map(its.Filter(its.ReaderToIter(r), its.FilterEmptyLines), func(row string) Machine2 {
+		parts := strings.Fields(row)
+		buttonParts := parts[1 : len(parts)-1]
+
+		joltagesPart := parts[len(parts)-1]
+		joltagesPart = joltagesPart[1 : len(joltagesPart)-1]
+
+		joltages := slices.Collect(its.Map(strings.SplitSeq(joltagesPart, ","), utils.MapStrToInt))
+		joltagesLen := len(joltages)
+
+		buttons := its.MapSlice(buttonParts, func(buttonStr string) []int {
+			button := make([]int, joltagesLen)
+
+			for idx := range its.Map(strings.SplitSeq(buttonStr[1:len(buttonStr)-1], ","), utils.MapStrToInt) {
+				button[idx] = 1
+			}
+			return button
+		})
+		return Machine2{joltages, buttons}
+	})), 0, func(acc int, i int, m Machine2) int {
+		m.Print()
+
+		sumJoltages := its.Reduce(slices.Values(m.joltages), 0, func(acc, j int) int { return acc + j })
+		maxJoltages := slices.Max(m.joltages)
+
+		fmt.Printf("range: %d -> %d\n", maxJoltages, sumJoltages)
+
+		return acc
+	})
 }
